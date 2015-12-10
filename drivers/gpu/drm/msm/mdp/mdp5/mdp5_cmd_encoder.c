@@ -22,10 +22,33 @@ static struct mdp5_kms *get_kms(struct drm_encoder *encoder)
 	return to_mdp5_kms(to_mdp_kms(priv->kms));
 }
 
-#ifdef DOWNSTREAM_CONFIG_MSM_BUS_SCALING
-#include <mach/board.h>
+#ifdef CONFIG_MSM_BUS_SCALING
 #include <linux/msm-bus.h>
-#include <linux/msm-bus-board.h>
+
+static void bs_init(struct mdp5_cmd_encoder *mdp5_cmd_enc)
+{
+	struct drm_encoder *encoder = &mdp5_cmd_enc->base;
+	struct platform_device *pdev = encoder->dev->platformdev;
+	struct msm_bus_scale_pdata *bus_scale_table;
+
+	bus_scale_table = msm_bus_cl_get_pdata(pdev);
+	if (!bus_scale_table) {
+		DBG("bus scaling is disabled\n");
+	} else {
+		mdp5_cmd_enc->bsc = msm_bus_scale_register_client(
+					bus_scale_table);
+	}
+
+	DBG("bus scale client: %08x", mdp5_cmd_enc->bsc);
+}
+
+static void bs_fini(struct mdp5_cmd_encoder *mdp5_cmd_enc)
+{
+	if (mdp5_cmd_enc->bsc) {
+		msm_bus_scale_unregister_client(mdp5_cmd_enc->bsc);
+		mdp5_cmd_enc->bsc = 0;
+	}
+}
 
 static void bs_set(struct mdp5_encoder *mdp5_cmd_enc, int idx)
 {
