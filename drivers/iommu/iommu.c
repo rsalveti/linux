@@ -1615,6 +1615,49 @@ out:
 	return ret;
 }
 
+struct fwnode_iommu_node {
+	struct list_head list;
+	struct fwnode_handle *fwnode;
+	const struct iommu_ops *ops;
+};
+static LIST_HEAD(fwnode_iommu_list);
+static DEFINE_SPINLOCK(fwnode_iommu_lock);
+
+void fwnode_iommu_set_ops(struct fwnode_handle *fwnode,
+			  const struct iommu_ops *ops)
+{
+	struct fwnode_iommu_node *iommu =
+				kzalloc(sizeof(*iommu), GFP_KERNEL);
+
+	if (WARN_ON(!iommu))
+		return;
+
+	if (is_of_node(fwnode))
+		of_node_get(to_of_node(fwnode));
+
+	INIT_LIST_HEAD(&iommu->list);
+	iommu->fwnode = fwnode;
+	iommu->ops = ops;
+	spin_lock(&fwnode_iommu_lock);
+	list_add_tail(&iommu->list, &fwnode_iommu_list);
+	spin_unlock(&fwnode_iommu_lock);
+}
+
+const struct iommu_ops *fwnode_iommu_get_ops(struct fwnode_handle *fwnode)
+{
+	struct fwnode_iommu_node *node;
+	const struct iommu_ops *ops = NULL;
+
+	spin_lock(&fwnode_iommu_lock);
+	list_for_each_entry(node, &fwnode_iommu_list, list)
+		if (node->fwnode == fwnode) {
+			ops = node->ops;
+			break;
+		}
+	spin_unlock(&fwnode_iommu_lock);
+	return ops;
+}
+
 int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
 		      const struct iommu_ops *ops)
 {
