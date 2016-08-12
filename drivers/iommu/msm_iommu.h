@@ -57,6 +57,8 @@
  * dom_node:	list head for domain
  * ctx_list:	list of 'struct msm_iommu_ctx_dev'
  * context_map: Bitmap to track allocated context banks
+ * domain:	iommu domain that this iommu dev is a member of,
+ * 		ie. whose msm_priv::list_attached are we on?
  */
 struct msm_iommu_dev {
 	void __iomem *base;
@@ -71,6 +73,7 @@ struct msm_iommu_dev {
 	DECLARE_BITMAP(context_map, IOMMU_MAX_CBS);
 
 	struct iommu_device iommu;
+	struct iommu_domain *domain;
 };
 
 /**
