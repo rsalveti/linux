@@ -627,7 +627,10 @@ int get_nohz_timer_target(void)
 	rcu_read_lock();
 	for_each_domain(cpu, sd) {
 		for_each_cpu(i, sched_domain_span(sd)) {
-			if (!idle_cpu(i) && is_housekeeping_cpu(cpu)) {
+			if (cpu == i)
+				continue;
+
+			if (!idle_cpu(i) && is_housekeeping_cpu(i)) {
 				cpu = i;
 				goto unlock;
 			}
@@ -3008,7 +3011,8 @@ static noinline void __schedule_bug(struct task_struct *prev)
 static inline void schedule_debug(struct task_struct *prev)
 {
 #ifdef CONFIG_SCHED_STACK_END_CHECK
-	BUG_ON(task_stack_end_corrupted(prev));
+	if (task_stack_end_corrupted(prev))
+		panic("corrupted stack end detected inside scheduler\n");
 #endif
 
 	if (unlikely(in_atomic_preempt_off())) {
@@ -4950,13 +4954,15 @@ void show_state_filter(unsigned long state_filter)
 		/*
 		 * reset the NMI-timeout, listing all files on a slow
 		 * console might take a lot of time:
+		 * Also, reset softlockup watchdogs on all CPUs, because
+		 * another CPU might be blocked waiting for us to process
+		 * an IPI.
 		 */
 		touch_nmi_watchdog();
+		touch_all_softlockup_watchdogs();
 		if (!state_filter || (p->state & state_filter))
 			sched_show_task(p);
 	}
-
-	touch_all_softlockup_watchdogs();
 
 #ifdef CONFIG_SCHED_DEBUG
 	sysrq_sched_debug_show();
