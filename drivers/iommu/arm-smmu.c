@@ -1521,6 +1521,14 @@ static int arm_smmu_add_device(struct device *dev)
 
 	iommu_device_link(&smmu->iommu, dev);
 
+	/*
+	 * Establish the link between smmu and master, so that the
+	 * smmu gets runtime enabled/disabled as per the master's
+	 * needs.
+	 */
+
+	device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
+
 	return 0;
 
 out_free:
