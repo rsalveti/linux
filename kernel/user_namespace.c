@@ -23,6 +23,12 @@
 #include <linux/projid.h>
 #include <linux/fs_struct.h>
 
+/*
+ * sysctl determining whether unprivileged users may unshare a new
+ * userns.  Allowed by default
+ */
+int unprivileged_userns_clone = 1;
+
 static struct kmem_cache *user_ns_cachep __read_mostly;
 static DEFINE_MUTEX(userns_state_mutex);
 
@@ -997,6 +1003,7 @@ bool current_in_userns(const struct user_namespace *target_ns)
 	}
 	return false;
 }
+EXPORT_SYMBOL(current_in_userns);
 
 static inline struct user_namespace *to_user_ns(struct ns_common *ns)
 {

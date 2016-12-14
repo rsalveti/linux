@@ -103,7 +103,14 @@ static int proc_notify_change(struct dentry *dentry, struct iattr *iattr)
 {
 	struct inode *inode = d_inode(dentry);
 	struct proc_dir_entry *de = PDE(inode);
+	struct user_namespace *s_user_ns;
 	int error;
+
+	/* Don't let anyone mess with weird proc files */
+	s_user_ns = inode->i_sb->s_user_ns;
+	if (!kuid_has_mapping(s_user_ns, inode->i_uid) ||
+	    !kgid_has_mapping(s_user_ns, inode->i_gid))
+		return -EPERM;
 
 	error = setattr_prepare(dentry, iattr);
 	if (error)
@@ -479,6 +486,7 @@ struct proc_dir_entry *proc_create_mount_point(const char *name)
 	}
 	return ent;
 }
+EXPORT_SYMBOL(proc_create_mount_point);
 
 struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
 					struct proc_dir_entry *parent,

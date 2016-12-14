@@ -82,7 +82,7 @@ static struct dentry *nbd_dbg_dir;
 
 static unsigned int nbds_max = 16;
 static struct nbd_device *nbd_dev;
-static int max_part;
+static int max_part = 15;
 
 static inline struct device *nbd_to_dev(struct nbd_device *nbd)
 {
@@ -120,8 +120,6 @@ static void nbd_size_update(struct nbd_device *nbd, struct block_device *bdev)
 	if (!nbd_is_connected(nbd))
 		return;
 
-	bdev->bd_inode->i_size = nbd->bytesize;
-	set_capacity(nbd->disk, nbd->bytesize >> 9);
 	kobject_uevent(&nbd_to_dev(nbd)->kobj, KOBJ_CHANGE);
 }
 
@@ -137,6 +135,8 @@ static int nbd_size_set(struct nbd_device *nbd, struct block_device *bdev,
 	nbd->blksize = blocksize;
 	nbd->bytesize = (loff_t)blocksize * (loff_t)nr_blocks;
 
+	bdev->bd_inode->i_size = nbd->bytesize;
+	set_capacity(nbd->disk, nbd->bytesize >> 9);
 	nbd_size_update(nbd, bdev);
 
 	return 0;

@@ -2506,7 +2506,7 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
 			return kvm_pmu_get_msr(vcpu, msr_info->index, &msr_info->data);
 		if (!ignore_msrs) {
-			vcpu_unimpl(vcpu, "unhandled rdmsr: 0x%x\n", msr_info->index);
+//			vcpu_unimpl(vcpu, "unhandled rdmsr: 0x%x\n", msr_info->index);
 			return 1;
 		} else {
 			vcpu_unimpl(vcpu, "ignored rdmsr: 0x%x\n", msr_info->index);
@@ -5913,7 +5913,7 @@ int kvm_arch_init(void *opaque)
 		goto out;
 	}
 	if (ops->disabled_by_bios()) {
-		printk(KERN_ERR "kvm: disabled by bios\n");
+		printk(KERN_WARNING "kvm: disabled by bios\n");
 		r = -EOPNOTSUPP;
 		goto out;
 	}
