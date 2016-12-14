@@ -83,6 +83,10 @@ igb ?
 ps3_gelic ?
 hamachi ?
 hermes ?
+hnae ?
+hns_dsaf ?
+hns_enet_drv ?
+hns_mdio ?
 hp ?
 hp100 ?
 hp-plus ?
@@ -175,6 +179,7 @@ sunlance ?
 sunqe ?
 sunvnet ?
 tg3 ?
+thunder_bgx ?
 tlan ?
 tms380tr ?
 tmspci ?
