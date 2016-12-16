@@ -46,7 +46,7 @@ CONFIG_SCOM_DEBUGFS                             policy<{'powerpc-generic': 'y', 
 CONFIG_64BIT                                    policy<{'amd64': 'y', 'arm64': 'y', 'i386': 'n', 'powerpc-generic': 'y', 'powerpc-powerpc64-emb': 'y', 'ppc64el': 'y', 's390x': 'y'}>
 
 # Menu: Boot options
-CONFIG_CMDLINE                                  policy<{'arm64': '"console=ttyAMA0"', 'armhf': '""'}>
+CONFIG_CMDLINE                                  policy<{'arm64': '""', 'armhf': '""'}>
 CONFIG_KEXEC                                    policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y', 's390x': 'y'}>
 CONFIG_CRASH_DUMP                               policy<{'amd64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc-generic': 'y', 'powerpc-powerpc64-emb': 'y', 'powerpc-powerpc-e500mc': 'n', 'powerpc-powerpc-smp': 'n', 'ppc64el': 'y', 's390x': 'y'}>
 CONFIG_EFI                                      policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'n', 'i386': 'y'}>
@@ -584,7 +584,7 @@ CONFIG_POWER_RESET_QNAP                         policy<{'armhf': 'n'}>
 CONFIG_POWER_RESET_RESTART                      policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y', 's390x': 'y'}>
 CONFIG_POWER_RESET_VERSATILE                    policy<{'armhf': 'y'}>
 CONFIG_POWER_RESET_VEXPRESS                     policy<{'arm64': 'y', 'armhf': 'y'}>
-CONFIG_POWER_RESET_XGENE                        policy<{'arm64': 'n'}>
+CONFIG_POWER_RESET_XGENE                        policy<{'arm64': 'y'}>
 CONFIG_POWER_RESET_SYSCON                       policy<{'arm64': 'y', 'armhf': 'y', 'powerpc': 'y', 'ppc64el': 'y'}>
 CONFIG_POWER_RESET_SYSCON_POWEROFF              policy<{'arm64': 'y', 'armhf': 'y', 'powerpc': 'y', 'ppc64el': 'y'}>
 CONFIG_POWER_RESET_RMOBILE                      policy<{'armhf': 'm'}>
@@ -752,7 +752,7 @@ CONFIG_CARDMAN_4040                             policy<{'amd64': 'm', 'i386': 'm
 CONFIG_IPWIRELESS                               policy<{'amd64': 'm', 'i386': 'm', 'powerpc': 'm'}>
 
 # Menu: Device Drivers >> Character devices >> Serial drivers
-CONFIG_SERIAL_AMBA_PL010                        policy<{'arm64': 'm', 'armhf': 'm'}>
+CONFIG_SERIAL_AMBA_PL010                        policy<{'arm64': 'y', 'armhf': 'm'}>
 CONFIG_SERIAL_AMBA_PL011                        policy<{'arm64': 'y', 'armhf': 'y'}>
 CONFIG_SERIAL_AMBA_PL011_CONSOLE                policy<{'arm64': 'y', 'armhf': 'y'}>
 CONFIG_SERIAL_EARLYCON_ARM_SEMIHOST             policy<{'arm64': 'y', 'armhf': 'y'}>
@@ -802,7 +802,7 @@ CONFIG_SERIAL_MVEBU_CONSOLE                     policy<{'armhf': 'y'}>
 
 # Menu: Device Drivers >> Character devices >> Serial drivers >> 8250/16550 and compatible serial support
 CONFIG_SERIAL_8250                              policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y', 's390x': 'n'}>
-CONFIG_SERIAL_8250_DEPRECATED_OPTIONS           policy<{'amd64': 'n', 'arm64': 'n', 'armhf': 'n', 'i386': 'n', 'powerpc': 'n', 'ppc64el': 'n'}>
+CONFIG_SERIAL_8250_DEPRECATED_OPTIONS           policy<{'amd64': 'n', 'arm64': 'y', 'armhf': 'n', 'i386': 'n', 'powerpc': 'n', 'ppc64el': 'n'}>
 CONFIG_SERIAL_8250_PNP                          policy<{'amd64': 'y', 'arm64': 'y', 'i386': 'y'}>
 CONFIG_SERIAL_8250_FINTEK                       policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'n', 'i386': 'y', 'powerpc': 'n', 'ppc64el': 'n'}>
 CONFIG_SERIAL_8250_CONSOLE                      policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y'}>
@@ -5822,7 +5822,7 @@ CONFIG_SCSI_AHA1740                             policy<{'i386': 'm'}>
 CONFIG_SCSI_AACRAID                             policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'i386': 'm', 'powerpc': 'm', 'ppc64el': 'm', 's390x': 'n'}>
 CONFIG_SCSI_AIC94XX                             policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'i386': 'm', 'powerpc': 'm', 'ppc64el': 'm', 's390x': 'n'}>
 CONFIG_AIC94XX_DEBUG                            policy<{'amd64': 'n', 'arm64': 'n', 'armhf': 'n', 'i386': 'n', 'powerpc': 'n', 'ppc64el': 'n'}>
-CONFIG_SCSI_HISI_SAS                            policy<{'arm64': 'n'}>
+CONFIG_SCSI_HISI_SAS                            policy<{'arm64': 'm'}>
 CONFIG_SCSI_MVSAS                               policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'i386': 'm', 'powerpc': 'm', 'ppc64el': 'm', 's390x': 'n'}>
 CONFIG_SCSI_MVSAS_DEBUG                         policy<{'amd64': 'n', 'arm64': 'n', 'armhf': 'n', 'i386': 'n', 'powerpc': 'n', 'ppc64el': 'n'}>
 CONFIG_SCSI_MVSAS_TASKLET                       policy<{'amd64': 'n', 'arm64': 'n', 'armhf': 'n', 'i386': 'n', 'powerpc': 'n', 'ppc64el': 'n'}>
