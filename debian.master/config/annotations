@@ -752,7 +752,7 @@ CONFIG_CARDMAN_4040                             policy<{'amd64': 'm', 'i386': 'm
 CONFIG_IPWIRELESS                               policy<{'amd64': 'm', 'i386': 'm', 'powerpc': 'm'}>
 
 # Menu: Device Drivers >> Character devices >> Serial drivers
-CONFIG_SERIAL_AMBA_PL010                        policy<{'arm64': 'y', 'armhf': 'm'}>
+CONFIG_SERIAL_AMBA_PL010                        policy<{'arm64': 'm', 'armhf': 'm'}>
 CONFIG_SERIAL_AMBA_PL011                        policy<{'arm64': 'y', 'armhf': 'y'}>
 CONFIG_SERIAL_AMBA_PL011_CONSOLE                policy<{'arm64': 'y', 'armhf': 'y'}>
 CONFIG_SERIAL_EARLYCON_ARM_SEMIHOST             policy<{'arm64': 'y', 'armhf': 'y'}>
