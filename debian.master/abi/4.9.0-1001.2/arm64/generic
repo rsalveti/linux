@@ -12852,6 +12852,10 @@ EXPORT_SYMBOL_GPL drivers/scsi/fcoe/libfcoe 0x00000000	fcoe_start_io
 EXPORT_SYMBOL_GPL drivers/scsi/fcoe/libfcoe 0x00000000	fcoe_validate_vport_create
 EXPORT_SYMBOL_GPL drivers/scsi/fcoe/libfcoe 0x00000000	fcoe_wwn_from_mac
 EXPORT_SYMBOL_GPL drivers/scsi/fcoe/libfcoe 0x00000000	fcoe_wwn_to_str
+EXPORT_SYMBOL_GPL drivers/scsi/hisi_sas/hisi_sas_main 0x00000000	hisi_sas_phy_down
+EXPORT_SYMBOL_GPL drivers/scsi/hisi_sas/hisi_sas_main 0x00000000	hisi_sas_probe
+EXPORT_SYMBOL_GPL drivers/scsi/hisi_sas/hisi_sas_main 0x00000000	hisi_sas_remove
+EXPORT_SYMBOL_GPL drivers/scsi/hisi_sas/hisi_sas_main 0x00000000	hisi_sas_slot_task_free
 EXPORT_SYMBOL_GPL drivers/scsi/iscsi_boot_sysfs 0x00000000	iscsi_boot_create_acpitbl
 EXPORT_SYMBOL_GPL drivers/scsi/iscsi_boot_sysfs 0x00000000	iscsi_boot_create_ethernet
 EXPORT_SYMBOL_GPL drivers/scsi/iscsi_boot_sysfs 0x00000000	iscsi_boot_create_host_kset
