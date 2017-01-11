@@ -804,7 +804,7 @@ CONFIG_SERIAL_MVEBU_CONSOLE                     policy<{'armhf': 'y'}>
 CONFIG_SERIAL_8250                              policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y', 's390x': 'n'}>
 CONFIG_SERIAL_8250_DEPRECATED_OPTIONS           policy<{'amd64': 'n', 'arm64': 'y', 'armhf': 'n', 'i386': 'n', 'powerpc': 'n', 'ppc64el': 'n'}>
 CONFIG_SERIAL_8250_PNP                          policy<{'amd64': 'y', 'arm64': 'y', 'i386': 'y'}>
-CONFIG_SERIAL_8250_FINTEK                       policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'n', 'i386': 'y', 'powerpc': 'n', 'ppc64el': 'n'}>
+CONFIG_SERIAL_8250_FINTEK                       policy<{'amd64': 'y', 'arm64': 'n', 'armhf': 'n', 'i386': 'y', 'powerpc': 'n', 'ppc64el': 'n'}>
 CONFIG_SERIAL_8250_CONSOLE                      policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y'}>
 CONFIG_SERIAL_8250_DMA                          policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y'}>
 CONFIG_SERIAL_8250_PCI                          policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'i386': 'y', 'powerpc': 'y', 'ppc64el': 'y'}>
