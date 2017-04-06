@@ -269,6 +269,7 @@ static struct clk_alpha_pll mmpll0_early = {
 	.offset = 0x0,
 	.vco_table = mmpll_p_vco,
 	.num_vco = ARRAY_SIZE(mmpll_p_vco),
+	.flags = SUPPORTS_FSM_MODE,
 	.clkr = {
 		.enable_reg = 0x100,
 		.enable_mask = BIT(0),
@@ -297,6 +298,7 @@ static struct clk_alpha_pll mmpll1_early = {
 	.offset = 0x30,
 	.vco_table = mmpll_p_vco,
 	.num_vco = ARRAY_SIZE(mmpll_p_vco),
+	.flags = SUPPORTS_FSM_MODE,
 	.clkr = {
 		.enable_reg = 0x100,
 		.enable_mask = BIT(1),
@@ -445,6 +447,8 @@ static struct clk_alpha_pll mmpll9_early = {
 	.offset = 0x4200,
 	.vco_table = mmpll_t_vco,
 	.num_vco = ARRAY_SIZE(mmpll_t_vco),
+	.flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_LATCHED_INPUT,
+	.latch_ack_bit = 29,
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "mmpll9_early",
 		.parent_names = (const char *[]){ "xo" },
@@ -1760,6 +1764,7 @@ static struct clk_branch video_ahb_clk = {
 };
 
 static struct clk_branch video_subcore0_clk = {
+	.halt_check = BRANCH_HALT_DELAY,
 	.halt_reg = 0x1048,
 	.clkr = {
 		.enable_reg = 0x1048,
@@ -1775,6 +1780,7 @@ static struct clk_branch video_subcore0_clk = {
 };
 
 static struct clk_branch video_subcore1_clk = {
+	.halt_check = BRANCH_HALT_DELAY,
 	.halt_reg = 0x104c,
 	.clkr = {
 		.enable_reg = 0x104c,
@@ -2902,6 +2908,7 @@ static struct gdsc mmagic_video_gdsc = {
 	.pd = {
 		.name = "mmagic_video",
 	},
+	.parent = &mmagic_bimc_gdsc.pd,
 	.pwrsts = PWRSTS_OFF_ON,
 	.flags = VOTABLE,
 };
@@ -2912,6 +2919,7 @@ static struct gdsc mmagic_mdss_gdsc = {
 	.pd = {
 		.name = "mmagic_mdss",
 	},
+	.parent = &mmagic_bimc_gdsc.pd,
 	.pwrsts = PWRSTS_OFF_ON,
 	.flags = VOTABLE,
 };
@@ -2922,6 +2930,7 @@ static struct gdsc mmagic_camss_gdsc = {
 	.pd = {
 		.name = "mmagic_camss",
 	},
+	.parent = &mmagic_bimc_gdsc.pd,
 	.pwrsts = PWRSTS_OFF_ON,
 	.flags = VOTABLE,
 };

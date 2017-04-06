@@ -114,6 +114,59 @@ struct qcom_pcie {
 
 #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
 
+static void wlan_get_resources(struct device *dev)
+{
+	int ret = 0;
+	int en_gpio, bootstrap_gpio, bt_en_gpio;
+	struct regulator *reg;
+
+#define WLAN_VREG_IO_NAME	"vdd-wlan-io"
+#define WLAN_EN_GPIO_NAME	"wlan-en-gpio"
+#define WLAN_BOOTSTRAP_GPIO_NAME "wlan-bootstrap-gpio"
+#define WLAN_EN_HIGH		1
+#define WLAN_EN_LOW		0
+#define WLAN_BOOTSTRAP_HIGH	1
+#define WLAN_BOOTSTRAP_LOW	0
+
+#define WLAN_BOOTSTRAP_DELAY   10
+#define WLAN_ENABLE_DELAY   10
+
+#define BT_EN_GPIO_NAME		"bt-en-gpio"
+
+	reg = regulator_get(dev, WLAN_VREG_IO_NAME);
+	if (IS_ERR(reg))
+		return;
+
+	ret = regulator_enable(reg);
+	en_gpio = of_get_named_gpio(dev->of_node,
+				WLAN_EN_GPIO_NAME, 0);
+	if (en_gpio < 0)
+		return;
+	ret = gpio_request(en_gpio, WLAN_EN_GPIO_NAME);
+	ret = gpio_direction_output(en_gpio, WLAN_EN_LOW);
+
+	bt_en_gpio = of_get_named_gpio(dev->of_node,
+				       BT_EN_GPIO_NAME, 0);
+	if (bt_en_gpio < 0)
+		return;
+	ret = gpio_request(bt_en_gpio, BT_EN_GPIO_NAME);
+	ret = gpio_direction_output(bt_en_gpio, WLAN_EN_LOW);
+
+	bootstrap_gpio = of_get_named_gpio(dev->of_node,
+					WLAN_BOOTSTRAP_GPIO_NAME, 0);
+	if (bootstrap_gpio < 0)
+		return;
+	ret = gpio_request(bootstrap_gpio, WLAN_BOOTSTRAP_GPIO_NAME);
+	ret = gpio_direction_output(bootstrap_gpio, WLAN_BOOTSTRAP_HIGH);
+	msleep(WLAN_BOOTSTRAP_DELAY);
+	gpio_set_value(en_gpio, WLAN_EN_HIGH);
+	msleep(WLAN_ENABLE_DELAY);
+	gpio_set_value(bt_en_gpio, WLAN_EN_HIGH);
+	msleep(WLAN_ENABLE_DELAY);
+
+	return;
+}
+
 static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
 {
 	gpiod_set_value(pcie->reset, 1);
@@ -580,12 +633,13 @@ static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
 	clk_disable_unprepare(res->aux_clk);
 }
 
-static void qcom_pcie_host_init(struct pcie_port *pp)
+static int qcom_pcie_host_init(struct pcie_port *pp)
 {
 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
 	int ret;
 
+	pm_runtime_get_sync(pci->dev);
 	qcom_ep_reset_assert(pcie);
 
 	ret = pcie->ops->init(pcie);
@@ -604,18 +658,22 @@ static void qcom_pcie_host_init(struct pcie_port *pp)
 	if (IS_ENABLED(CONFIG_PCI_MSI))
 		dw_pcie_msi_init(pp);
 
+	wlan_get_resources(pci->dev);
 	qcom_ep_reset_deassert(pcie);
 
 	ret = qcom_pcie_establish_link(pcie);
 	if (ret)
 		goto err;
 
-	return;
+	return ret;
 err:
 	qcom_ep_reset_assert(pcie);
 	phy_power_off(pcie->phy);
 err_deinit:
 	pcie->ops->deinit(pcie);
+	pm_runtime_put_sync(pci->dev);
+
+	return ret;
 }
 
 static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
@@ -678,6 +736,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
 	if (!pcie)
 		return -ENOMEM;
 
+	pm_runtime_enable(dev);
 	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
 	if (!pci)
 		return -ENOMEM;
